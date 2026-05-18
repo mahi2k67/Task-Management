@@ -1,13 +1,32 @@
-import { connectDB } from "@/lib/mongodb";
+import Link from "next/link";
 
-export default async function Home() {
-  await connectDB();
-
+export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-screen flex flex-col items-center justify-center gap-4">
       <h1 className="text-3xl font-bold">
-        Database Connected
+        Task Management App
       </h1>
+
+      <Link
+        href="/login"
+        className="text-blue-600 hover:underline"
+      >
+        Login
+      </Link>
+
+      <Link
+        href="/register"
+        className="text-blue-600 hover:underline"
+      >
+        Register
+      </Link>
+
+      <Link
+        href="/dashboard"
+        className="text-blue-600 hover:underline"
+      >
+        Dashboard
+      </Link>
     </main>
   );
 }
