@@ -11,23 +11,31 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   function handleLogin() {
-    if (!email || !password) {
-      alert("Please enter email and password");
+    const savedUser = localStorage.getItem("user");
+
+    // No registered user
+    if (!savedUser) {
+      alert("No account found. Please register first.");
+      router.push("/register");
       return;
     }
 
-    // fake login success
-    localStorage.setItem("loggedIn", "true");
-    router.push("/dashboard");
+    const user = JSON.parse(savedUser);
+
+    // Check login credentials
+    if (
+      email === user.email &&
+      password === user.password
+    ) {
+      localStorage.setItem("loggedIn", "true");
+      router.push("/dashboard");
+    } else {
+      alert("Invalid email or password");
+    }
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 text-white flex items-center justify-center p-6 overflow-hidden">
-      
-      <div className="fixed top-10 left-10 text-3xl animate-bounce">✨</div>
-      <div className="fixed top-24 right-20 text-3xl animate-pulse">💎</div>
-      <div className="fixed bottom-20 left-20 text-3xl animate-bounce">🌟</div>
-
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-800 text-white flex items-center justify-center p-6">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,12 +50,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <MiniCard emoji="🎯" text="Focus" />
-          <MiniCard emoji="🚀" text="Grow" />
-          <MiniCard emoji="🏆" text="Win" />
-        </div>
-
         <div className="space-y-4">
           <input
             type="email"
@@ -56,7 +58,7 @@ export default function LoginPage() {
             onChange={(e) =>
               setEmail(e.target.value)
             }
-            className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 outline-none placeholder:text-gray-300"
+            className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 outline-none"
           />
 
           <input
@@ -66,41 +68,29 @@ export default function LoginPage() {
             onChange={(e) =>
               setPassword(e.target.value)
             }
-            className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 outline-none placeholder:text-gray-300"
+            className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 outline-none"
           />
 
           <button
             onClick={handleLogin}
-            className="w-full bg-cyan-500 hover:bg-cyan-600 hover:scale-105 transition py-4 rounded-2xl font-semibold"
+            className="w-full bg-cyan-500 hover:bg-cyan-600 py-4 rounded-2xl font-semibold"
           >
             Login
           </button>
         </div>
 
         <p className="text-center text-gray-300 mt-6">
-          Student Productivity App
+          New user?{" "}
+          <span
+            onClick={() =>
+              router.push("/register")
+            }
+            className="text-cyan-300 cursor-pointer"
+          >
+            Register
+          </span>
         </p>
       </motion.div>
     </main>
-  );
-}
-
-function MiniCard({
-  emoji,
-  text,
-}: {
-  emoji: string;
-  text: string;
-}) {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.08 }}
-      className="backdrop-blur-lg bg-white/10 border border-white/20 rounded-2xl p-3 text-center"
-    >
-      <div className="text-2xl mb-1">
-        {emoji}
-      </div>
-      <p className="text-sm">{text}</p>
-    </motion.div>
   );
 }
